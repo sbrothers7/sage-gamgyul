@@ -18,6 +18,7 @@
   python run_3_evaluate.py
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -26,9 +27,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pandas as pd
 
 from src.core import (
-    PROJECT_ROOT, compute_metrics, ensure_dir, get_device, load_checkpoint,
-    load_config, make_loader, predict, print_metrics, save_json, scan_source,
-    set_seed,
+    PROJECT_ROOT, apply_model_override, compute_metrics, ensure_dir,
+    get_device, load_checkpoint, load_config, make_loader, predict,
+    print_metrics, save_json, scan_source, set_seed,
 )
 
 
@@ -53,15 +54,23 @@ def evaluate_frame(model, frame, cfg, device, classes, title):
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model", default=None,
+        help="run_2_train.py 때와 같은 --model 값을 주면 그 architecture의 "
+             "결과(results/<모델이름>/)를 평가합니다. 생략하면 config.yaml 값을 씁니다.",
+    )
+    args = parser.parse_args()
+
     cfg = load_config()
     set_seed(cfg["seed"])
     device = get_device()
     classes = cfg["classes"]
-    out_root = ensure_dir(cfg["output"]["root"])
-    metrics_dir = ensure_dir(out_root / "metrics")
     manifest_dir = Path(cfg["output"]["root"]) / "manifests"
+    out_root = ensure_dir(apply_model_override(cfg, args.model))
+    metrics_dir = ensure_dir(out_root / "metrics")
 
-    ckpt = Path(cfg["output"]["root"]) / "checkpoints" / "best.pt"
+    ckpt = out_root / "checkpoints" / "best.pt"
     model = load_checkpoint(ckpt, cfg, len(classes), device)
 
     print("=" * 62)

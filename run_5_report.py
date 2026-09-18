@@ -13,6 +13,7 @@
   python run_5_report.py
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -26,7 +27,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from src.core import ensure_dir, load_config
+from src.core import apply_model_override, ensure_dir, load_config
 
 # 그림 공통 스타일
 plt.rcParams["figure.dpi"] = 120
@@ -174,9 +175,17 @@ def plot_per_class_drop(results: dict, classes: list, fig_dir: Path) -> bool:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model", default=None,
+        help="run_2_train.py 때와 같은 --model 값을 주면 그 architecture의 "
+             "결과(results/<모델이름>/)로 보고서를 만듭니다. 생략하면 config.yaml 값을 씁니다.",
+    )
+    args = parser.parse_args()
+
     cfg = load_config()
     classes = cfg["classes"]
-    out_root = Path(cfg["output"]["root"])
+    out_root = apply_model_override(cfg, args.model)
     fig_dir = ensure_dir(out_root / "figures")
 
     print("=" * 62)

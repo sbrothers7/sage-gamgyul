@@ -14,6 +14,7 @@
   python run_2_train.py
 """
 
+import argparse
 import sys
 import time
 from pathlib import Path
@@ -25,17 +26,27 @@ import torch
 import torch.nn as nn
 
 from src.core import (
-    build_model, compute_metrics, ensure_dir, get_device, load_config,
-    make_loader, predict, print_metrics, save_json, set_seed,
+    apply_model_override, build_model, compute_metrics, ensure_dir,
+    get_device, load_config, make_loader, predict, print_metrics,
+    save_json, set_seed,
 )
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model", default=None,
+        help="timm 모델 이름으로 config.yaml 의 model.name 을 덮어씁니다 "
+             "(예: resnet50, densenet121, efficientnet_b0, mobilenetv3_large_100). "
+             "생략하면 config.yaml 값을 그대로 씁니다. 결과는 results/<모델이름>/ 에 따로 저장됩니다.",
+    )
+    args = parser.parse_args()
+
     cfg = load_config()
     set_seed(cfg["seed"])
     device = get_device()
     classes = cfg["classes"]
-    out_root = ensure_dir(cfg["output"]["root"])
+    out_root = ensure_dir(apply_model_override(cfg, args.model))
     ckpt_dir = ensure_dir(out_root / "checkpoints")
 
     manifest = Path(cfg["output"]["root"]) / "manifests" / "source_A.csv"

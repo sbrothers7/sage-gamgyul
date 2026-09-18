@@ -5,3 +5,5 @@ __pycache__/
 # Generated/reproducible data & outputs (see README: make_test_data.py, run_1..5)
 data/
 results/
+.DS_Store
+.env

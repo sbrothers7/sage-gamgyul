@@ -15,6 +15,7 @@
   python run_4_gradcam.py
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -29,8 +30,8 @@ import pandas as pd
 import torch
 
 from src.core import (
-    build_transforms, ensure_dir, get_device, load_checkpoint, load_config,
-    save_json, set_seed,
+    apply_model_override, build_transforms, ensure_dir, get_device,
+    load_checkpoint, load_config, save_json, set_seed,
 )
 from src.explain import (
     GradCAM, denormalize, leaf_mask_with_status, lesion_focus_score,
@@ -120,15 +121,23 @@ def run_source(model, frame, cfg, device, classes, source_key, out_dir):
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model", default=None,
+        help="run_2_train.py 때와 같은 --model 값을 주면 그 architecture의 "
+             "결과(results/<모델이름>/)로 Grad-CAM을 만듭니다. 생략하면 config.yaml 값을 씁니다.",
+    )
+    args = parser.parse_args()
+
     cfg = load_config()
     set_seed(cfg["seed"])
     device = get_device()
     classes = cfg["classes"]
-    out_root = ensure_dir(cfg["output"]["root"])
-    cam_dir = ensure_dir(out_root / "gradcam")
     manifest_dir = Path(cfg["output"]["root"]) / "manifests"
+    out_root = ensure_dir(apply_model_override(cfg, args.model))
+    cam_dir = ensure_dir(out_root / "gradcam")
 
-    ckpt = Path(cfg["output"]["root"]) / "checkpoints" / "best.pt"
+    ckpt = out_root / "checkpoints" / "best.pt"
     model = load_checkpoint(ckpt, cfg, len(classes), device)
 
     print("=" * 62)

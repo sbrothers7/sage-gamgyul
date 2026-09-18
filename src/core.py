@@ -68,6 +68,22 @@ def load_config(path: str | Path | None = None) -> dict:
     return cfg
 
 
+def apply_model_override(cfg: dict, model_name: str | None) -> Path:
+    """--model 로 architecture를 바꿀 때 씁니다.
+
+    cfg["model"]["name"]을 덮어쓰고, 결과를 모델별 하위 폴더
+    (results/<model_name>/)에 저장하도록 경로를 돌려줍니다. 이렇게 해야
+    여러 architecture를 비교할 때 서로의 checkpoint·성적표를 덮어쓰지
+    않습니다. model_name이 없으면(플래그 생략) 기존과 동일하게 results/
+    바로 아래를 씁니다.
+    """
+    out_root = Path(cfg["output"]["root"])
+    if model_name:
+        cfg["model"]["name"] = model_name
+        out_root = out_root / model_name
+    return out_root
+
+
 def set_seed(seed: int) -> None:
     """난수를 고정해서 매번 같은 결과가 나오게 합니다.
 
@@ -312,7 +328,9 @@ def load_checkpoint(path: str | Path, cfg: dict, num_classes: int,
             f"먼저 run_2_train.py 를 실행하세요."
         )
     checkpoint = torch.load(path, map_location=device, weights_only=False)
-    model = build_model(cfg, num_classes)
+    # 학습 당시의 architecture를 그대로 씁니다 (config.yaml이 그 사이 바뀌어도 안전).
+    ckpt_cfg = {**cfg, "model": {**cfg["model"], "name": checkpoint.get("model_name", cfg["model"]["name"])}}
+    model = build_model(ckpt_cfg, num_classes)
     model.load_state_dict(checkpoint["model_state"])
     model.to(device)
     model.eval()
