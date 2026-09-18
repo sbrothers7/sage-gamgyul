@@ -42,7 +42,8 @@ data:
 # --- 모델 -------------------------------------------------------------
 model:
   # 아래 중 하나를 고르세요. 원 논문의 최고 성능 모델은 efficientnet_b0 입니다.
-  #   efficientnet_b0 / resnet50 / densenet121 / mobilenetv3_large_100
+  # 원 논문이 비교한 4종: efficientnet_b0 / resnet50 / densenet121 / mobilenetv2_100
+  # (다른 timm 모델 이름도 됩니다. 한 번만 바꿔 보려면: python run_2_train.py --model resnet50)
   name: efficientnet_b0
   pretrained: true         # ImageNet 사전학습 가중치 사용 (전이학습)
   dropout: 0.3

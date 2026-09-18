@@ -107,6 +107,24 @@ def main() -> int:
         )
         if m_b:
             results["B"] = m_b
+            # source_B/<병해>/<출처>/파일 구조면 출처별로도 봅니다. 같은 병해라도
+            # 출처마다 점수가 다르면 '병해가 어렵다'가 아니라 '촬영 조건이 다르다'는 뜻입니다.
+            b_root = Path(cfg["data"]["source_B"])
+            pred_b["origin"] = [
+                parts[1] if len(parts) > 2 else "-"
+                for parts in (Path(p).relative_to(b_root).parts for p in pred_b["path"])
+            ]
+            print("  source_B 출처별 (같은 병해라도 출처에 따라 다른가)")
+            print(f"  {'병해/출처':<26}{'장수':>7}{'정확도':>9}   예측 분포")
+            by_origin = {}
+            for (label, origin), g in pred_b.groupby(["true_label", "origin"]):
+                predicted = {k: int(v) for k, v in g["pred_label"].value_counts().items()}
+                acc = float(g["correct"].mean())
+                by_origin[f"{label}/{origin}"] = {"n": int(len(g)), "accuracy": acc, "predicted": predicted}
+                dist = ", ".join(f"{k} {v}" for k, v in predicted.items())
+                print(f"  {label + '/' + origin:<26}{len(g):>7}{acc * 100:>8.1f}%   {dist}")
+            print()
+            results["B_by_origin"] = by_origin
             pred_b.to_csv(metrics_dir / "predictions_B.csv",
                           index=False, encoding="utf-8")
     else:

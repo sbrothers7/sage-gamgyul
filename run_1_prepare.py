@@ -11,6 +11,7 @@
   python run_1_prepare.py
 """
 
+import shutil
 import sys
 from pathlib import Path
 
@@ -54,7 +55,7 @@ def main() -> int:
         print("     [문제] 이미지가 한 장도 없습니다.")
         problems.append(
             "source_A 폴더가 비어 있습니다. "
-            "docs/01_데이터_수집_가이드.md 를 보고 데이터를 넣으세요."
+            "docs/01_data_collection_guide.md 를 보고 데이터를 넣으세요."
         )
     else:
         counts = a.frame["label"].value_counts()
@@ -90,8 +91,12 @@ def main() -> int:
     # ---- 중복 검사 (데이터 누출 방지) --------------------------------
     # A와 B에 같은 파일이 들어가면 '일반화 검증'이 성립하지 않습니다.
     # (Kapoor & Narayanan, 2023 의 data leakage 점검)
-    if a.total and b.total:
+    # 같은 출처 안의 중복도 봅니다. A 안의 사본은 학습/시험에 갈라져 들어가
+    # 누출이 되고, B 안의 사본은 장수를 부풀립니다.
+    # ※ 바이트가 똑같은 사본만 잡습니다. 크기만 바꾼 사본은 못 잡습니다.
+    if a.total or b.total:
         import hashlib
+        from collections import Counter
 
         def digest(path):
             h = hashlib.md5()
@@ -102,15 +107,22 @@ def main() -> int:
         print()
         print("-" * 62)
         print("  중복 검사 (데이터 누출 방지)")
-        a_hashes = {digest(p) for p in a.frame["path"]}
-        overlap = [p for p in b.frame["path"] if digest(p) in a_hashes]
+        a_digests = [digest(p) for p in a.frame["path"]] if a.total else []
+        b_digests = [digest(p) for p in b.frame["path"]] if b.total else []
+        for name, digests in [("source_A", a_digests), ("source_B", b_digests)]:
+            extra = sum(n - 1 for n in Counter(digests).values() if n > 1)
+            if extra:
+                print(f"     [경고] {name} 안에 똑같은 이미지가 {extra}장 더 있습니다.")
+                problems.append(f"{name} 내부 중복 이미지 {extra}장 — 제거할 것")
+        a_hashes = set(a_digests)
+        overlap = [p for p, d in zip(b.frame["path"], b_digests) if d in a_hashes] if b.total else []
         if overlap:
             print(f"     [경고] A와 B에 똑같은 이미지가 {len(overlap)}장 있습니다.")
             print("            이러면 일반화 검증이 성립하지 않습니다. 반드시 지우세요.")
             for p in overlap[:5]:
                 print(f"              {p}")
             problems.append(f"A/B 중복 이미지 {len(overlap)}장 — 반드시 제거할 것")
-        else:
+        elif not any("중복" in p for p in problems):
             print("     통과 — 겹치는 이미지 없음")
 
     # ---- 분할 및 저장 -------------------------------------------------
@@ -152,9 +164,10 @@ def main() -> int:
 
         for name, source in [("source_A", cfg["data"]["source_A"]),
                              ("source_B", cfg["data"]["source_B"])]:
+            dst = PROJECT_ROOT / "data" / "nobg" / name
+            shutil.rmtree(dst, ignore_errors=True)  # 지난 실행의 사본이 남지 않게
             if not Path(source).exists():
                 continue
-            dst = PROJECT_ROOT / "data" / "nobg" / name
             n = process_folder(source, dst)
             print(f"     {name}: {n}장 처리 -> {dst}")
 

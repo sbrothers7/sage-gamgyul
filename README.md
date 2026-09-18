@@ -42,12 +42,20 @@ python make_test_data.py --clean
 
 ### 3. 진짜 데이터 넣기
 
-`docs/01_데이터_수집_가이드.md` 를 읽고 그대로 따라 하세요.
+지금까지 쓴 공개 데이터셋은 한 번에 받아서 정리할 수 있습니다 (약 2.3GB).
+
+```
+pip install kagglehub
+python build_data.py
+```
+
+직접 찍은 사진을 더 넣거나 다른 데이터셋을 쓰려면
+`docs/01_data_collection_guide.md` 를 읽고 그대로 따라 하세요.
 이 연구에서 가장 시간이 오래 걸리는 단계입니다.
 
 ### 4. 실험 시작
 
-`docs/02_실험_프로토콜.md` 를 읽고 1단계부터 순서대로 실행하세요.
+`docs/02_experiment_protocol.md` 를 읽고 1단계부터 순서대로 실행하세요.
 
 ---
 
@@ -60,6 +68,7 @@ python make_test_data.py --clean
 ├── setup_windows.bat       ← 환경 설치 (한 번만)
 ├── start.bat               ← 연구 시작할 때 더블클릭
 ├── make_test_data.py       ← 가짜 데이터 생성 (코드 점검용)
+├── build_data.py           ← 공개 데이터셋 받기 + 중복 정리 → data/raw
 │
 ├── run_1_prepare.py        ← [1] 데이터 준비 및 점검
 ├── run_2_train.py          ← [2] 모델 학습 (원 논문 재현)
@@ -72,9 +81,9 @@ python make_test_data.py --clean
 │   └── explain.py          ← Grad-CAM·배경제거
 │
 ├── docs/
-│   ├── 01_데이터_수집_가이드.md
-│   ├── 02_실험_프로토콜.md
-│   └── 03_연구노트.md       ← 실험할 때마다 기록
+│   ├── 01_data_collection_guide.md
+│   ├── 02_experiment_protocol.md
+│   └── 03_research_notebook.md  ← 실험할 때마다 기록
 │
 ├── data/raw/
 │   ├── source_A/           ← 재현용 (공개 데이터셋)
