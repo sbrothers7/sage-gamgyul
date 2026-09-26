@@ -1,0 +1,24 @@
+{
+ "crop": "Citrus",
+ "source": "Mendeley 3f83gxmv57 v2 (Rauf et al., Sargodha) - leaves only | Melanose excluded (13 images)",
+ "counts": {
+  "Black Spot": 171,
+  "Canker": 163,
+  "Greening": 204,
+  "Healthy": 58
+ },
+ "classes": {
+  "Black Spot": [
+   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\Black spot"
+  ],
+  "Canker": [
+   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\canker"
+  ],
+  "Greening": [
+   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\greening"
+  ],
+  "Healthy": [
+   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\healthy"
+  ]
+ }
+}

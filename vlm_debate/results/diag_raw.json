@@ -1,0 +1,86 @@
+{
+ "granite3.2-vision:latest": [
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaves exhibit dark, irregularly shaped spots on their surface, which are characteristic of the Black Spot disease in citrus plants. The spots are distributed unevenly across the leaves, indicating a widespread infection. The leaves appear to be healthy otherwise, with no visible signs of wilting or discoloration.\nConfidence: 0.9"
+  },
+  {
+   "gt": "Black Spot",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf exhibits a dark, irregularly shaped spot on the upper surface, which is characteristic of the Black Spot disease in citrus plants. The surrounding leaves appear healthy and green.\nConfidence: 0.9"
+  },
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Healthy\nDiseased: No\nReasoning: The image shows a crop leaf with no visible signs of disease such as black spots, canker, or greening. The leaf appears to be in good health with a uniform color and texture.\nConfidence: 1.0"
+  }
+ ],
+ "llava:7b": [
+  {
+   "gt": "Melanose",
+   "text": " Crop Category: Citrus\nDisease Category: Melanose\nDiseased: Yes\nReasoning: The image shows a citrus leaf with a pattern of dark, irregular spots that are characteristic of melanose, a fungal disease that affects citrus plants. The spots are dark brown or black and can be irregular in shape, which is consistent with the symptoms of melanose. The spots are also present on the underside of the leaf, which is another common characteristic of this disease. The confidence level is high, as the spots are clearly visible and the pattern is consistent with known symptoms of melanose. "
+  },
+  {
+   "gt": "Black Spot",
+   "text": " Crop Category: Citrus\nDisease Category: Greening\nDiseased: No\nReasoning: The image shows a citrus leaf with a healthy green color, indicating that it is not affected by any of the diseases listed. The leaf appears to be in good condition with no visible signs of black spot, canker, or melanose. The confidence level for this analysis is 1.0, as there is no evidence of disease in the image. "
+  },
+  {
+   "gt": "Melanose",
+   "text": " Crop Category: Citrus\nDisease Category: Melanose\nDiseased: Yes\nReasoning: The image shows a citrus leaf with a pattern of dark spots and a yellowish hue, which is characteristic of melanose disease in citrus plants. The spots are irregularly shaped and are scattered across the leaf. The leaf's edges are also discolored, which is a common symptom of melanose. The overall appearance of the leaf suggests that it is affected by this disease.\nConfidence: 1.0 "
+  }
+ ],
+ "qwen2.5vl:3b": [
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf shows dark, irregular spots with a distinct halo effect, which is characteristic of Black Spot. The presence of these spots and the overall discoloration of the leaf suggests the presence of the disease.\nConfidence: 0.8"
+  },
+  {
+   "gt": "Black Spot",
+   "text": "Crop Category: Citrus\nDisease Category: Greening\nDiseased: Yes\nReasoning: The leaf shows signs of chlorosis, which is a common symptom of citrus greening disease. The leaf is also discolored, with a greenish hue, which is characteristic of this disease. The leaf edges are not curled or distorted, which would be indicative of other diseases like black spot or canker.\nConfidence: 0.8"
+  },
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf shows dark brown spots with a slightly raised edge, which are characteristic of Black Spot disease. The presence of these spots and the overall discoloration suggests the disease is present.\nConfidence: 0.8"
+  }
+ ],
+ "qwen2.5vl:7b": [
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf shows dark, circular spots with a brownish center, which is characteristic of citrus black spot disease. This disease typically appears as small, dark spots on the leaf surface, often with a yellow halo around the edges. The presence of these symptoms strongly indicates the presence of citrus black spot.\nConfidence: 0.95"
+  },
+  {
+   "gt": "Black Spot",
+   "text": "Crop Category: Citrus\nDisease Category: Greening\nDiseased: Yes\nReasoning: The leaf shows symptoms of citrus Greening disease, characterized by chlorotic (yellowish) areas and necrotic (brown) spots, which are indicative of the disease's progression. This is a common symptom of citrus Greening disease.\nConfidence: 0.95"
+  },
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf shows dark, circular spots with a light halo, which is characteristic of citrus black spot disease. This disease is commonly found on citrus leaves and fruits, causing the leaves to become discolored and eventually fall off. The presence of these spots on the leaf is strong evidence of the disease.\nConfidence: 0.95"
+  }
+ ],
+ "gemma3:4b": [
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The image clearly shows numerous small, dark, circular spots on the leaves of what appears to be a citrus plant, specifically consistent with the appearance of black spot disease. The spots are concentrated along the leaf margins and have a characteristic dark, velvety appearance, which is a hallmark symptom of this fungal infection.\nConfidence: 0.95"
+  },
+  {
+   "gt": "Black Spot",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf exhibits distinct circular lesions with a dark, concentric ring pattern, which is characteristic of *Citrus* black spot disease. The lesions are primarily concentrated at the leaf margins and lower portions, further supporting this diagnosis.\nConfidence: 0.95"
+  },
+  {
+   "gt": "Melanose",
+   "text": "Crop Category: Citrus\nDisease Category: Black Spot\nDiseased: Yes\nReasoning: The leaf exhibits numerous small, dark, circular spots with concentric rings, characteristic of *Alternaria citri* (black spot). The spots are surrounded by a pale halo, and the overall pattern strongly suggests the presence of black spot disease in citrus.\nConfidence: 0.95"
+  }
+ ],
+ "moondream:latest": [
+  {
+   "gt": "Melanose",
+   "text": "\n 0.0"
+  },
+  {
+   "gt": "Black Spot",
+   "text": "\n 0.0"
+  },
+  {
+   "gt": "Melanose",
+   "text": "\n 0.0"
+  }
+ ]
+}

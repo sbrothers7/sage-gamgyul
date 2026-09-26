@@ -1,0 +1,20 @@
+{
+ "dataset_root": "C:\\Users\\peter\\OneDrive\\Desktop\\AI_Renaissance\\citrus-vlm-debate-main\\data\\citrus_zenodo.json",
+ "output_dir": "C:\\Users\\peter\\OneDrive\\Desktop\\AI_Renaissance\\citrus-vlm-debate-main\\results\\20260924_1638_main180_zenodo_ev-on",
+ "n_images": 180,
+ "n_debate": 3,
+ "seed": 42,
+ "softmax_temp": 2.0,
+ "mock": false,
+ "use_judge": false,
+ "require_new_evidence": true,
+ "agents": [
+  "llava:7b",
+  "qwen2.5vl:7b",
+  "qwen2.5vl:3b"
+ ],
+ "debate_agents": null,
+ "vida_cache": null,
+ "enforce_evidence": false,
+ "started": "2026-09-24 16:38:51"
+}

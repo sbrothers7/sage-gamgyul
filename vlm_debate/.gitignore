@@ -1,0 +1,14 @@
+# 루트 .gitignore 가 data/, results/ 를 제외하므로 이 폴더에서는 다시 포함
+!data/
+!results/
+
+.env
+logs/
+_remote/
+__pycache__/
+*.pyc
+data/images/
+data/*/
+tools/selftest/fake_data/
+tools/selftest/mock_out/
+results/*/checkpoints/

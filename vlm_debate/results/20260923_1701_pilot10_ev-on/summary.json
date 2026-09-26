@@ -1,0 +1,38 @@
+{
+ "n_images": 10,
+ "agents": [
+  "llava:7b",
+  "qwen2.5vl:7b",
+  "qwen2.5vl:3b"
+ ],
+ "debate_agents": [
+  "qwen2.5vl:3b",
+  "qwen2.5vl:7b",
+  "llava:7b"
+ ],
+ "weights": {
+  "qwen2.5vl:3b": 0.35013186144895325,
+  "qwen2.5vl:7b": 0.3330557290654515,
+  "llava:7b": 0.3168124094855952
+ },
+ "baseline_both": 0.4,
+ "consensus_both": 0.4,
+ "delta": 0.0,
+ "baseline_crop": 1.0,
+ "consensus_crop": 1.0,
+ "baseline_disease": 0.4,
+ "consensus_disease": 0.4,
+ "influence": {
+  "qwen2.5vl:3b→llava:7b": 6,
+  "qwen2.5vl:7b→llava:7b": 3,
+  "qwen2.5vl:7b→qwen2.5vl:3b": 2,
+  "qwen2.5vl:3b→qwen2.5vl:7b": 4,
+  "llava:7b→qwen2.5vl:3b": 2
+ },
+ "stubborn_pct": {
+  "qwen2.5vl:3b": 90.0,
+  "qwen2.5vl:7b": 80.0,
+  "llava:7b": 60.0
+ },
+ "mock": false
+}

@@ -1,0 +1,4 @@
+﻿agent,n,crop_acc,disease_acc,combined_acc,parse_fail_pct,mean_confidence,reasoning_quality,plausibility
+qwen2.5vl:3b,10,1.0,0.4,0.4,0.0,0.86,,
+qwen2.5vl:7b,10,1.0,0.3,0.3,0.0,0.94,,
+llava:7b,10,1.0,0.2,0.2,0.0,1.0,,
