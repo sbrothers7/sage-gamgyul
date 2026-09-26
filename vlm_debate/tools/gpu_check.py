@@ -42,7 +42,8 @@ except Exception as ex:
     log(f'error {ex}'); ok = False
 
 # discovery lines from both log sources
-for lf in [Path(os.environ.get('LOCALAPPDATA', '')) / 'Ollama' / 'server.log',
+for lf in [Path(os.environ.get('LOCALAPPDATA', '')) / 'Ollama' / 'server.log' if os.name == 'nt'
+           else Path.home() / '.ollama' / 'logs' / 'server.log',
            ROOT / 'logs' / f'serve_{tag}.log']:
     if lf.exists():
         L = lf.read_text(encoding='utf-8', errors='replace').splitlines()

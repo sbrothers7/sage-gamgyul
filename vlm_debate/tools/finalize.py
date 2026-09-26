@@ -30,8 +30,9 @@ ZMAP = {'citrusleafminer': 'Leaf Miner', 'fe': 'Iron Deficiency', 'greasyspot': 
 
 def zenodo():
     from PIL import Image
-    src = Path('C:/citrus-data/zenodo_8294078/CitrusUAT_dataset/CitrusUAT_dataset/Images')
-    dst = Path('C:/citrus-data/zenodo_768')
+    from vp_core import data_root
+    src = data_root() / 'zenodo_8294078/CitrusUAT_dataset/CitrusUAT_dataset/Images'
+    dst = data_root() / 'zenodo_768'
     counts, unknown = {}, set()
     for f in sorted(src.iterdir()):
         if not f.is_file(): continue
@@ -45,7 +46,7 @@ def zenodo():
             im.save(out, quality=90)
         counts[cls] = counts.get(cls, 0) + 1
     spec = {'crop': 'Citrus', 'source': 'Zenodo 8294078 CitrusUAT (C. sinensis), Images resized to 768px',
-            'counts': counts, 'classes': {c: [str(dst / c)] for c in sorted(counts)}}
+            'counts': counts, 'classes': {c: ['zenodo_768/' + c] for c in sorted(counts)}}
     (ROOT / 'data' / 'citrus_zenodo.json').write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding='utf-8')
     log('zenodo classes:', ', '.join(f'{k}={v}' for k, v in sorted(counts.items())))
     if unknown: log('UNKNOWN prefixes:', unknown)

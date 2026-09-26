@@ -53,8 +53,9 @@ if errorlevel 1 "%GIT%" config user.name "peter"
 "%GIT%" config user.email >nul 2>&1
 if errorlevel 1 "%GIT%" config user.email "peter9167@naver.com"
 "%GIT%" add -A vlm_debate >> "%LOG%" 2>&1
+"%GIT%" update-index --chmod=+x vlm_debate/run.sh >> "%LOG%" 2>&1
 "%GIT%" status --short >> "%LOG%" 2>&1
-"%GIT%" commit -m "Add VLM multi-agent debate experiment (VIDA+PANDA, anti-sycophancy OFF/ON/HARD)" >> "%LOG%" 2>&1
+"%GIT%" commit -m "Update VLM debate: macOS/Linux support (run.sh), OS-independent data paths" >> "%LOG%" 2>&1
 
 echo [5] push (sign in if a window opens)
 "%GIT%" push -u origin %BR% >> "%LOG%" 2>&1

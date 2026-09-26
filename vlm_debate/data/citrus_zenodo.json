@@ -17,40 +17,41 @@
  },
  "classes": {
   "Greasy Spot": [
-   "C:\\citrus-data\\zenodo_768\\Greasy Spot"
+   "zenodo_768/Greasy Spot"
   ],
   "Greening": [
-   "C:\\citrus-data\\zenodo_768\\Greening"
+   "zenodo_768/Greening"
   ],
   "Healthy": [
-   "C:\\citrus-data\\zenodo_768\\Healthy"
+   "zenodo_768/Healthy"
   ],
   "Iron Deficiency": [
-   "C:\\citrus-data\\zenodo_768\\Iron Deficiency"
+   "zenodo_768/Iron Deficiency"
   ],
   "Leaf Miner": [
-   "C:\\citrus-data\\zenodo_768\\Leaf Miner"
+   "zenodo_768/Leaf Miner"
   ],
   "Magnesium Deficiency": [
-   "C:\\citrus-data\\zenodo_768\\Magnesium Deficiency"
+   "zenodo_768/Magnesium Deficiency"
   ],
   "Manganese Deficiency": [
-   "C:\\citrus-data\\zenodo_768\\Manganese Deficiency"
+   "zenodo_768/Manganese Deficiency"
   ],
   "Nitrogen Deficiency": [
-   "C:\\citrus-data\\zenodo_768\\Nitrogen Deficiency"
+   "zenodo_768/Nitrogen Deficiency"
   ],
   "Red Scale": [
-   "C:\\citrus-data\\zenodo_768\\Red Scale"
+   "zenodo_768/Red Scale"
   ],
   "Red Scale Sequelae": [
-   "C:\\citrus-data\\zenodo_768\\Red Scale Sequelae"
+   "zenodo_768/Red Scale Sequelae"
   ],
   "Texas Mite": [
-   "C:\\citrus-data\\zenodo_768\\Texas Mite"
+   "zenodo_768/Texas Mite"
   ],
   "Zinc Deficiency": [
-   "C:\\citrus-data\\zenodo_768\\Zinc Deficiency"
+   "zenodo_768/Zinc Deficiency"
   ]
- }
+ },
+ "paths_relative_to": "CITRUS_DATA (default: ~/citrus-data on macOS/Linux, C:/citrus-data on Windows)"
 }

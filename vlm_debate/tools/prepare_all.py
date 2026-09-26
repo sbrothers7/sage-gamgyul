@@ -10,7 +10,7 @@ Steps (each is skipped if already done, so re-running is safe):
   4) Data (in parallel with 3):
        A  Mendeley 3f83gxmv57 v2  (leaves)
        B  Zenodo 8294078 CitrusUAT
-     stored OUTSIDE OneDrive: D:\citrus-data  (or C:\citrus-data if no D:)
+     stored in CITRUS_DATA (default: Windows D:/ or C:/citrus-data, macOS/Linux ~/citrus-data)
   5) data/*.json specs + .env
   6) dedup A vs B
   7) selftest, bench, 10-image pilot run
@@ -31,7 +31,10 @@ HOST = 'http://localhost:11434'
 UA = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) citrus-vlm-setup'}
 IMG_EXT = {'.jpg', '.jpeg', '.png', '.bmp', '.webp'}
 
-DATA = Path('D:/citrus-data') if Path('D:/').exists() else Path('C:/citrus-data')
+sys.path.insert(0, str(ROOT / 'src'))
+from vp_core import data_root
+DATA = data_root()
+IS_WIN = os.name == 'nt'
 
 _lk = threading.Lock()
 _logf = open(LOG, 'a', encoding='utf-8')
@@ -91,7 +94,9 @@ def ollama_exe():
     w = shutil.which('ollama')
     if w: return w
     for c in (Path(os.environ.get('LOCALAPPDATA', '')) / 'Programs/Ollama/ollama.exe',
-              Path(os.environ.get('ProgramFiles', 'C:/Program Files')) / 'Ollama/ollama.exe'):
+              Path(os.environ.get('ProgramFiles', 'C:/Program Files')) / 'Ollama/ollama.exe',
+              Path('/opt/homebrew/bin/ollama'), Path('/usr/local/bin/ollama'), Path('/usr/bin/ollama'),
+              Path('/Applications/Ollama.app/Contents/Resources/ollama')):
         if c.exists(): return str(c)
     return None
 
@@ -135,6 +140,17 @@ def download(url, dst: Path, tag, expect_size=None):
 
 def step_ollama():
     exe = ollama_exe()
+    if not exe and not IS_WIN:
+        if sys.platform == 'darwin' and shutil.which('brew'):
+            log('Ollama not installed -> brew install ollama', 'ollama')
+            sh('brew install ollama', 'ollama', timeout=1800)
+            exe = ollama_exe()
+        if not exe:
+            log('Ollama is not installed. Install it, then run this again:', 'ollama')
+            log('  macOS : brew install ollama   (or the app from https://ollama.com/download)', 'ollama')
+            log('  Arch  : sudo pacman -S ollama-cuda   (NVIDIA)  /  ollama-rocm (AMD)  /  ollama (CPU)', 'ollama')
+            log('  Linux : curl -fsSL https://ollama.com/install.sh | sh', 'ollama')
+            save_state(ollama='not_installed'); raise RuntimeError('Ollama not installed')
     if not exe:
         log('Ollama not installed -> winget', 'ollama')
         sh('winget install -e --id Ollama.Ollama --silent --accept-package-agreements '
@@ -151,9 +167,10 @@ def step_ollama():
     log(f'ollama at {exe}', 'ollama')
     if serving() is None:
         log('starting ollama serve', 'ollama')
-        flags = 0x00000008 | 0x00000200   # DETACHED_PROCESS | NEW_PROCESS_GROUP
-        subprocess.Popen([exe, 'serve'], creationflags=flags, stdout=subprocess.DEVNULL,
-                         stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+        kw = ({'creationflags': 0x00000008 | 0x00000200} if IS_WIN   # DETACHED | NEW_GROUP
+              else {'start_new_session': True})
+        subprocess.Popen([exe, 'serve'], stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, **kw)
         for _ in range(60):
             if serving() is not None: break
             time.sleep(1)
@@ -318,7 +335,9 @@ def build_spec(root: Path, out_json: Path, source: str, tag, only_under=None):
         if only_under and not any(p.name.lower() in only_under for p in [d] + list(d.parents)):
             continue
         name = map_disease(d.name)
-        classes.setdefault(name, []).append(str(d))
+        try: rel = d.relative_to(DATA).as_posix()
+        except ValueError: rel = str(d)
+        classes.setdefault(name, []).append(rel)
         counts[name] = counts.get(name, 0) + sum(1 for f in d.iterdir()
                                                  if f.suffix.lower() in IMG_EXT)
     spec = {'crop': 'Citrus', 'source': source, 'counts': counts, 'classes': classes}

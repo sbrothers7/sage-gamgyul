@@ -82,6 +82,30 @@ TAXONOMY = Taxonomy.cddm()      # 실행 시 데이터셋에 맞춰 교체됨
 # ══════════════════════════════════════════════════════════════════════════
 # 2. 데이터셋 로딩 (층화 추출)
 # ══════════════════════════════════════════════════════════════════════════
+def data_root():
+    """이미지 원본 폴더. 환경변수 CITRUS_DATA 가 우선.
+    기본값: Windows 는 D:/citrus-data (없으면 C:/citrus-data), macOS·Linux 는 ~/citrus-data"""
+    env = os.environ.get('CITRUS_DATA')
+    if env:
+        return Path(os.path.expanduser(env))
+    if os.name == 'nt':
+        return Path('D:/citrus-data') if Path('D:/').exists() else Path('C:/citrus-data')
+    return Path.home() / 'citrus-data'
+
+
+def resolve_data_path(p):
+    """명세의 경로: 상대경로면 data_root() 기준. Windows 절대경로(C:\\...)도 그대로 허용."""
+    p = os.path.expandvars(os.path.expanduser(str(p)))
+    q = Path(p.replace('\\', '/')) if os.name != 'nt' else Path(p)
+    return q if q.is_absolute() or re.match(r'^[A-Za-z]:[\\/]', p) else data_root() / q
+
+
+def _os_independent_key(base):
+    """Windows 의 경로 정렬(대소문자 무시, 경로 조각 단위)을 모든 OS 에서 똑같이 재현.
+    → 같은 seed 면 Windows·macOS·Linux 에서 같은 이미지가 뽑힌다."""
+    return lambda f: tuple(x.lower() for x in f.relative_to(base).parts)
+
+
 def load_dataset(root, n_images=10, seed=42, taxonomy=None):
     """<root>/<"작물,병해">/*.jpg 구조에서 병해80/건강20 비율로 추출.
 
@@ -107,11 +131,11 @@ def load_dataset(root, n_images=10, seed=42, taxonomy=None):
     for cl in tax.classes:
         if spec is not None:
             disease = cl.split(',', 1)[1].strip()
-            dirs = [Path(x) for x in spec['classes'].get(disease, [])]
+            dirs = [resolve_data_path(x) for x in spec['classes'].get(disease, [])]
             imgs = []
             for dd in dirs:
                 if dd.exists():
-                    imgs += [f for f in sorted(dd.rglob('*'))
+                    imgs += [f for f in sorted(dd.rglob('*'), key=_os_independent_key(dd))
                              if f.suffix.lower() in ('.jpg', '.jpeg', '.png', '.bmp', '.webp')]
             if not imgs:
                 missing.append(cl); continue

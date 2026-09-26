@@ -12,3 +12,4 @@ data/*/
 tools/selftest/fake_data/
 tools/selftest/mock_out/
 results/*/checkpoints/
+.venv/

@@ -70,10 +70,14 @@ def main():
                 seen['pct'] = pct
                 print(f"  .. {st.get('phase')} {st['done']}/{st['total']}", flush=True)
 
-    # keep Windows awake while running (no permanent setting change)
+    # keep the computer awake while running (no permanent setting change)
     try:
-        import ctypes
-        ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)
+        if os.name == 'nt':
+            import ctypes
+            ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)
+        elif sys.platform == 'darwin':
+            import subprocess
+            subprocess.Popen(['caffeinate', '-i', '-w', str(os.getpid())])
     except Exception:
         pass
     r = R(cfg, on_event=ev)

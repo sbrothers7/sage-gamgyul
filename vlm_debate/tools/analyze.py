@@ -36,8 +36,10 @@ def cond_name(cfg, summ):
 
 
 def main():
-    runs = [d for d in sorted(RES.iterdir()) if d.is_dir() and 'main' in d.name
-            and (d / 'summary.json').exists()]
+    # every finished run except pilots (pass a name filter as 2nd argument, e.g. "jeju")
+    filt = sys.argv[2] if len(sys.argv) > 2 else ''
+    runs = [d for d in sorted(RES.iterdir()) if d.is_dir() and (d / 'summary.json').exists()
+            and 'pilot' not in d.name and filt in d.name]
     out = [f'# Analysis — {time.strftime("%Y-%m-%d %H:%M")}\n']
     data = {}
     for d in runs:

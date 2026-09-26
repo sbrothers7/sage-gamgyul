@@ -66,6 +66,7 @@ def main():
     from PIL import Image
     log('=' * 70); log('diagnose', time.strftime('%Y-%m-%d %H:%M:%S'))
     log(sh('ollama --version').strip())
+    log('platform', sys.platform, '| data root', C.data_root())
     log(sh('nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv'))
 
     # ── images ──
@@ -114,7 +115,8 @@ def main():
     log(sh('nvidia-smi --query-gpu=memory.used,memory.total --format=csv'))
 
     # ── Ollama server log (GPU offload lines) ──
-    sl = Path(os.environ.get('LOCALAPPDATA', '')) / 'Ollama' / 'server.log'
+    sl = (Path(os.environ.get('LOCALAPPDATA', '')) / 'Ollama' / 'server.log' if os.name == 'nt'
+          else Path.home() / '.ollama' / 'logs' / 'server.log')
     if sl.exists():
         lines = sl.read_text(encoding='utf-8', errors='replace').splitlines()
         keys = ('offload', 'library=', 'inference compute', 'layers', 'vram', 'cuda', 'CPU')
@@ -122,7 +124,7 @@ def main():
         log('\n--- server.log (gpu lines, last 40) ---'); [log(l[:300]) for l in hits[-40:]]
 
     # ── Zenodo labels ──
-    z = Path('C:/citrus-data/zenodo_8294078')
+    z = C.data_root() / 'zenodo_8294078'
     log('\n--- zenodo non-image files ---')
     for f in sorted(z.rglob('*')):
         if f.is_file() and f.suffix.lower() not in ('.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff', '.zip', '.part'):

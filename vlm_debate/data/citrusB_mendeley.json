@@ -10,19 +10,20 @@
  },
  "classes": {
   "Black Spot": [
-   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\Black spot"
+   "mendeley_3f83gxmv57_v2/x/A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning/Citrus Plant Dataset/Citrus/Citrus/Leaves/Black spot"
   ],
   "Canker": [
-   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\canker"
+   "mendeley_3f83gxmv57_v2/x/A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning/Citrus Plant Dataset/Citrus/Citrus/Leaves/canker"
   ],
   "Greening": [
-   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\greening"
+   "mendeley_3f83gxmv57_v2/x/A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning/Citrus Plant Dataset/Citrus/Citrus/Leaves/greening"
   ],
   "Healthy": [
-   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\healthy"
+   "mendeley_3f83gxmv57_v2/x/A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning/Citrus Plant Dataset/Citrus/Citrus/Leaves/healthy"
   ],
   "Melanose": [
-   "C:\\citrus-data\\mendeley_3f83gxmv57_v2\\x\\A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning\\Citrus Plant Dataset\\Citrus\\Citrus\\Leaves\\Melanose"
+   "mendeley_3f83gxmv57_v2/x/A Citrus Fruits and Leaves Dataset for Detection and Classification of Citrus Diseases through Machine Learning/Citrus Plant Dataset/Citrus/Citrus/Leaves/Melanose"
   ]
- }
+ },
+ "paths_relative_to": "CITRUS_DATA (default: ~/citrus-data on macOS/Linux, C:/citrus-data on Windows)"
 }
