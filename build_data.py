@@ -86,6 +86,27 @@ def fetch_kaku321(out):
     shutil.copytree(src, out)
 
 
+def fetch_orange_leaves_hlb_2025(out):
+    """Mendeley jgkh2jxbwt. 잎만 잘라낸 preprocessed 사진만 씁니다
+    (healthy 와 greening 둘 다 같은 방식으로 처리된 것이라야 배경이 단서가 되지 않습니다)."""
+    zip_path = DOWNLOADS / "orange_leaves_hlb_2025.zip"
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+    if not zipfile.is_zipfile(zip_path):
+        run("curl", "-L", "--retry", "5", "-C", "-", "-o", str(zip_path),
+            "https://data.mendeley.com/public-files/datasets/jgkh2jxbwt/files/"
+            "42c44990-bc2e-44f6-8ea8-0618403612b9/file_downloaded")
+    folders = {
+        "greening": "Symptoms HLB Leaves/preprocessed_images",
+        "healthy": "Healty Leaves/preprocessed_images",  # 원본 폴더 이름의 오타 그대로
+    }
+    with zipfile.ZipFile(zip_path) as z:
+        for cls, sub in folders.items():
+            (out / cls).mkdir(parents=True, exist_ok=True)
+            for name in z.namelist():
+                if sub in name and name.lower().endswith((".png", ".jpg", ".jpeg")):
+                    (out / cls / Path(name).name).write_bytes(z.read(name))
+
+
 def fetch_citrus_uat(out):
     zip_path = DOWNLOADS / "CitrusUAT_dataset.zip"
     zip_path.parent.mkdir(parents=True, exist_ok=True)
@@ -104,6 +125,7 @@ def fetch_citrus_uat(out):
 
 FETCHERS = {
     "citrus_leaves": fetch_citrus_leaves,
+    "orange_leaves_hlb_2025": fetch_orange_leaves_hlb_2025,
     "Plant_Village_Orange": fetch_plant_village_orange,
     "citrus-plant-disease": fetch_kaku321,
     "CitrusUAT": fetch_citrus_uat,
@@ -131,7 +153,7 @@ def first_of_each_block(folder):
 def build():
     seen = set()  # 이미 넣은 파일의 해시. A와 겹치거나 B 안에서 겹치면 뺍니다.
 
-    print("  source_A (Citrus Leaves)")
+    print("  source_A (Citrus Leaves + Orange Leaves HLB 2025)")
     for c in CLASSES:
         dst = RAW / "source_A" / c
         dst.mkdir(parents=True, exist_ok=True)
@@ -143,7 +165,24 @@ def build():
             shutil.copy2(f, dst / f.name)
             seen.add(md5(f))
             n += 1
-        print(f"     {c:<10}{n:>6} 장")
+        # 두 번째 출처. healthy 와 greening 만 있습니다 (canker 없음).
+        extra = DATASETS / "orange_leaves_hlb_2025" / c
+        n_extra = 0
+        if extra.is_dir():
+            sub = dst / "orange_leaves_hlb_2025"
+            shutil.rmtree(sub, ignore_errors=True)
+            sub.mkdir(parents=True)
+            for f in sorted(extra.iterdir()):
+                if f.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
+                    continue
+                digest = md5(f)
+                if digest in seen:
+                    continue
+                seen.add(digest)
+                shutil.copy2(f, sub / f.name)
+                n_extra += 1
+        suffix = f" (+ {n_extra} orange_leaves_hlb_2025)" if n_extra else ""
+        print(f"     {c:<10}{n + n_extra:>6} 장{suffix}")
 
     kaku = DATASETS / "citrus-plant-disease"
     groups = [

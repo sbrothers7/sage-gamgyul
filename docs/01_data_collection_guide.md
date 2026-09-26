@@ -189,14 +189,24 @@ This table is required in the paper.
 
 | | Source | URL or location | Published / taken | Images | Labels confirmed by |
 |---|---|---|---|---|---|
-| A | Citrus Leaves Dataset (Rauf et al., 2019, Mendeley) | <https://github.com/ai-agriculture-circuits-and-systems/citrus_leaves> | Published 2019 | 420 (healthy 58 / canker 163 / greening 199) | (not yet confirmed by an expert) |
+| A-1 | Citrus Leaves Dataset (Rauf et al., 2019, Mendeley) | <https://github.com/ai-agriculture-circuits-and-systems/citrus_leaves> | Published 2019 | 420 (healthy 58 / canker 163 / greening 199) | (not yet confirmed by an expert) |
+| A-2 | Orange Leaves Images Dataset for HLB (Mendeley, 2025) | <https://data.mendeley.com/datasets/jgkh2jxbwt/1> | Published 2025 | healthy 129 / greening 195 | (not yet confirmed) |
 | B-1 | Plant Village Orange — Huanglongbing | <https://github.com/ai-agriculture-circuits-and-systems/Plant_Village_Orange> | PlantVillage release | greening 5,507 | (not yet confirmed) |
 | B-2 | kaku321 / citrus-plant-disease (Kaggle) | <https://www.kaggle.com/datasets/kaku321/citrus-plant-disease> | Unknown (appears web-scraped) | healthy 100 / canker 52 / greening 69 | (not yet confirmed) |
 | B-3 | CitrusUAT (Gómez-Flores et al., 2024) | <https://zenodo.org/records/8294078> | Published 2024 | healthy 100 / greening (HLB) 43 | HLB confirmed by qPCR in the original paper |
 
 `source_B` uses the layout `data/raw/source_B/<class>/<origin>/`, with origins
 `PlantVillage`, `kaku321` and `CitrusUAT`, so results can be broken down by
-origin.
+origin. In `source_A` the Rauf images sit directly in `source_A/<class>/` and
+the second source in `source_A/<class>/orange_leaves_hlb_2025/`; both are found
+because the scan is recursive.
+
+Set A totals 744 images (healthy 187 / canker 163 / greening 394) from the two
+sources above. A-2 supplies only healthy and greening, so **canker comes from a
+single source**, and A-2's images are leaves cut out on a black background while
+A-1's sit on white. Both facts are confounds worth stating in the paper: a model
+can in principle use background or capture style, and canker is the only class
+with no black-background examples.
 
 `python build_data.py` downloads these datasets and applies the cleaning below
 to produce `data/raw/`. This way the collaborator gets identical data.
@@ -214,6 +224,10 @@ in the paper's data section.
     original is missing, the lowest-numbered image was kept.
   - One healthy photo appeared as two separate blocks, and the second copy was
     removed.
+- **Orange Leaves HLB 2025 (A-2):** only the `preprocessed_images` folders were
+  used, so healthy and greening are processed the same way. The raw
+  (unsegmented) photos in the archive cover healthy only and were left out, and
+  one greening image was dropped as a duplicate (196 → 195).
 - **Citrus Leaves (A):** 5 greening images were re-saved or brightness-changed
   copies of other photos (nos. 9, 28, 45, 79 and 188). They were removed to
   prevent train/test leakage, reducing A from 425 to 420 images.

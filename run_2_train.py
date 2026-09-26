@@ -40,13 +40,22 @@ def main() -> int:
              "(예: resnet50, densenet121, efficientnet_b0, mobilenetv3_large_100). "
              "생략하면 config.yaml 값을 그대로 씁니다. 결과는 results/<모델이름>/ 에 따로 저장됩니다.",
     )
+    parser.add_argument(
+        "--tag", default=None,
+        help="같은 모델로 조건만 바꿔 여러 번 돌릴 때 결과를 results/<모델이름>_<tag>/ 에 따로 저장합니다.",
+    )
+    parser.add_argument(
+        "--train-fraction", type=float, default=1.0,
+        help="학습 데이터의 일부만 씁니다 (병해별 비율 유지). 학습 장수를 늘리면 "
+             "일반화가 좋아지는지 보려면 0.25, 0.5, 0.75, 1.0 으로 돌려 비교하세요.",
+    )
     args = parser.parse_args()
 
     cfg = load_config()
     set_seed(cfg["seed"])
     device = get_device()
     classes = cfg["classes"]
-    out_root = ensure_dir(apply_model_override(cfg, args.model))
+    out_root = ensure_dir(apply_model_override(cfg, args.model, args.tag))
     ckpt_dir = ensure_dir(out_root / "checkpoints")
 
     manifest = Path(cfg["output"]["root"]) / "manifests" / "source_A.csv"
@@ -61,6 +70,11 @@ def main() -> int:
     if len(train_frame) == 0:
         print("[오류] 학습용 이미지가 없습니다.")
         return 1
+
+    if args.train_fraction < 1.0:
+        train_frame = train_frame.groupby("label", group_keys=False).sample(
+            frac=args.train_fraction, random_state=cfg["seed"]
+        )
 
     print("=" * 62)
     print("  [2단계] 모델 학습 — 원 논문 재현")
@@ -172,6 +186,7 @@ def main() -> int:
         "best_epoch": best_epoch,
         "best_val_f1": best_score,
         "elapsed_minutes": elapsed / 60,
+        "train_fraction": args.train_fraction,
         "n_train": len(train_frame),
         "n_val": len(val_frame),
         "config": cfg,

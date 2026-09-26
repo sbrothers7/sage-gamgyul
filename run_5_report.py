@@ -181,11 +181,15 @@ def main() -> int:
         help="run_2_train.py 때와 같은 --model 값을 주면 그 architecture의 "
              "결과(results/<모델이름>/)로 보고서를 만듭니다. 생략하면 config.yaml 값을 씁니다.",
     )
+    parser.add_argument(
+        "--tag", default=None,
+        help="같은 모델로 조건만 바꿔 여러 번 돌릴 때 결과를 results/<모델이름>_<tag>/ 에 따로 저장합니다.",
+    )
     args = parser.parse_args()
 
     cfg = load_config()
     classes = cfg["classes"]
-    out_root = apply_model_override(cfg, args.model)
+    out_root = apply_model_override(cfg, args.model, args.tag)
     fig_dir = ensure_dir(out_root / "figures")
 
     print("=" * 62)

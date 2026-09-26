@@ -68,7 +68,8 @@ def load_config(path: str | Path | None = None) -> dict:
     return cfg
 
 
-def apply_model_override(cfg: dict, model_name: str | None) -> Path:
+def apply_model_override(cfg: dict, model_name: str | None,
+                         tag: str | None = None) -> Path:
     """--model 로 architecture를 바꿀 때 씁니다.
 
     cfg["model"]["name"]을 덮어쓰고, 결과를 모델별 하위 폴더
@@ -76,11 +77,16 @@ def apply_model_override(cfg: dict, model_name: str | None) -> Path:
     여러 architecture를 비교할 때 서로의 checkpoint·성적표를 덮어쓰지
     않습니다. model_name이 없으면(플래그 생략) 기존과 동일하게 results/
     바로 아래를 씁니다.
+
+    tag 는 같은 architecture로 조건만 바꿔 여러 번 돌릴 때 씁니다
+    (예: --tag frac25 → results/<model_name>_frac25/).
     """
     out_root = Path(cfg["output"]["root"])
     if model_name:
         cfg["model"]["name"] = model_name
-        out_root = out_root / model_name
+    name = cfg["model"]["name"] if (model_name or tag) else None
+    if name:
+        out_root = out_root / (f"{name}_{tag}" if tag else name)
     return out_root
 
 
